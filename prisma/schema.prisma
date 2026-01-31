@@ -1,0 +1,219 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// =======================
+// BETTER AUTH TABLES
+// =======================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions      Session[]
+  accounts      Account[]
+
+  // Наши связи приложения
+  profile       UserProfile?
+  programs      Program[]
+  dailyLogs     DailyLog[]
+  aiCredits     Int       @default(20) // Лимит для стартапа
+  
+  @@map("user") // Better Auth любит lowercase имена таблиц по умолчанию
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  expiresAt             DateTime?
+  password              String?
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+
+  @@map("verification")
+}
+
+// =======================
+// FITNESS APP CORE
+// =======================
+
+model UserProfile {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  gender        String
+  birthDate     DateTime
+  height        Int
+  weight        Float
+  activityLevel String
+  goal          String
+  
+  updatedAt     DateTime @updatedAt
+  @@map("user_profile")
+}
+
+model Exercise {
+  id           String   @id @default(cuid())
+  name         String
+  muscleGroup  String
+  videoUrl     String?  // Ссылка на локальный GIF или YouTube
+  instructions String?
+  
+  isSystem     Boolean  @default(true) // true = видят все, false = кастомное
+  
+  logs         ExerciseLog[]
+  plannedIn    PlannedExercise[]
+
+  @@map("exercise")
+}
+
+model Program {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  name           String
+  isActive       Boolean  @default(true)
+  
+  // Цели от AI
+  targetCalories Int
+  targetProtein  Int
+  targetCarbs    Int
+  targetFat      Int
+
+  workouts       WorkoutTemplate[]
+  createdAt      DateTime @default(now())
+  
+  @@map("program")
+}
+
+model WorkoutTemplate {
+  id        String   @id @default(cuid())
+  programId String
+  program   Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  
+  name      String
+  dayOfWeek Int? 
+  
+  exercises PlannedExercise[]
+  
+  @@map("workout_template")
+}
+
+model PlannedExercise {
+  id                String          @id @default(cuid())
+  workoutTemplateId String
+  workoutTemplate   WorkoutTemplate @relation(fields: [workoutTemplateId], references: [id], onDelete: Cascade)
+  
+  exerciseId        String
+  exercise          Exercise        @relation(fields: [exerciseId], references: [id])
+  
+  sets              Int
+  reps              String
+  order             Int
+  
+  @@map("planned_exercise")
+}
+
+model DailyLog {
+  id       String   @id @default(cuid())
+  userId   String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date     DateTime @db.Date // 2026-01-31
+
+  calories Int      @default(0)
+  protein  Int      @default(0)
+  carbs    Int      @default(0)
+  fat      Int      @default(0)
+  
+  meals    Meal[]
+  workouts WorkoutSession[]
+
+  @@unique([userId, date])
+  @@map("daily_log")
+}
+
+model Meal {
+  id         String   @id @default(cuid())
+  dailyLogId String
+  dailyLog   DailyLog @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+  
+  name       String
+  calories   Int
+  protein    Int
+  carbs      Int
+  fat        Int
+  
+  @@map("meal")
+}
+
+model WorkoutSession {
+  id         String   @id @default(cuid())
+  dailyLogId String
+  dailyLog   DailyLog @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+  
+  name       String
+  completedAt DateTime @default(now())
+  
+  exercises  ExerciseLog[]
+  
+  @@map("workout_session")
+}
+
+model ExerciseLog {
+  id               String         @id @default(cuid())
+  workoutSessionId String
+  workoutSession   WorkoutSession @relation(fields: [workoutSessionId], references: [id], onDelete: Cascade)
+  
+  exerciseId       String
+  exercise         Exercise       @relation(fields: [exerciseId], references: [id])
+  
+  sets             SetLog[]
+  
+  @@map("exercise_log")
+}
+
+model SetLog {
+  id            String      @id @default(cuid())
+  exerciseLogId String
+  exerciseLog   ExerciseLog @relation(fields: [exerciseLogId], references: [id], onDelete: Cascade)
+  
+  weight        Float
+  reps          Int
+  
+  @@map("set_log")
+}
