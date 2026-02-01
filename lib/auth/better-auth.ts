@@ -2,12 +2,24 @@ import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { betterAuth } from 'better-auth/minimal';
 import { nextCookies } from 'better-auth/next-js';
 
-import { prisma } from '../../prisma/prisma';
+import { db } from '../../prisma/db';
 
 export const auth = betterAuth({
-  database: prismaAdapter(prisma, {
+  database: prismaAdapter(db, {
     provider: 'postgresql',
   }),
+
+  user: {
+    additionalFields: {
+      role: { type: 'string', required: false, defaultValue: 'user' },
+      gender: { type: 'string', required: false },
+      birthDate: { type: 'date', required: false },
+      height: { type: 'number', required: false },
+      weight: { type: 'number', required: false },
+      activityLevel: { type: 'string', required: false },
+      goal: { type: 'string', required: false },
+    },
+  },
 
   trustedOrigins: [process.env.BETTER_AUTH_URL!],
 

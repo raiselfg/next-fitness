@@ -33,21 +33,21 @@ export const SignupForm = () => {
         <Label htmlFor="name">Имя</Label>
         <Input type="text" id="name" name="name" placeholder="Дмитрий" required />
         {state?.errors?.name && (
-          <p className="text-red-500">Имя должно: {state?.errors.name.join(', ')}</p>
+          <p className="text-red-500 text-xs">{state?.errors.name.join(', ')}</p>
         )}
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="email">Почта</Label>
         <Input type="email" id="email" name="email" placeholder="example@gmail.com" required />
         {state?.errors?.email && (
-          <p className="text-red-500">Почта должна: {state?.errors.email.join(', ')}</p>
+          <p className="text-red-500 text-xs">{state?.errors.email.join(', ')}</p>
         )}
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="password">Пароль</Label>
         <Input type="password" id="password" name="password" placeholder="***" required />
         {state?.errors?.password && (
-          <p className="text-red-500">Пароль должен: {state?.errors.password.join(', ')}</p>
+          <p className="text-red-500 text-xs">{state?.errors.password.join(', ')}</p>
         )}
       </div>
       <Button type="submit" disabled={pending}>

@@ -16,21 +16,21 @@ export const LogoutButton = () => {
 
   const handleLogout = () => {
     startTransition(async () => {
-      const toastId = toast.loading('Выход...');
+      toast.loading('Выход...');
 
       try {
         await logout();
 
-        toast.success('Выход выполнен', { id: toastId });
+        toast.success('Выход выполнен');
         router.push(APP_ROUTES.LOGIN);
       } catch {
-        toast.error('Произошла ошибка', { id: toastId });
+        toast.error('Произошла ошибка');
       }
     });
   };
 
   return (
-    <Button onClick={handleLogout} disabled={isPending}>
+    <Button className="w-full" variant="destructive" onClick={handleLogout} disabled={isPending}>
       {isPending ? (
         <div className="flex items-center gap-2">
           <Spinner /> <p>Выход...</p>

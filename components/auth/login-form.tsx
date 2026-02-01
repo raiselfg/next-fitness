@@ -25,14 +25,14 @@ export const LoginForm = () => {
         <Label htmlFor="email">Почта</Label>
         <Input type="email" id="email" name="email" placeholder="example@gmail.com" required />
         {state?.errors?.email && (
-          <p className="text-red-500">Почта должна: {state?.errors.email.join(', ')}</p>
+          <p className="text-red-500 text-xs">Почта должна: {state?.errors.email.join(', ')}</p>
         )}
       </div>
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="password">Пароль</Label>
         <Input type="password" id="password" name="password" placeholder="***" required />
         {state?.errors?.password && (
-          <p className="text-red-500">Пароль должен: {state?.errors.password.join(', ')}</p>
+          <p className="text-red-500 text-xs">Пароль должен: {state?.errors.password.join(', ')}</p>
         )}
       </div>
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { IconBrandGithub, IconBrandGoogle } from '@tabler/icons-react';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 
@@ -14,41 +15,54 @@ interface Props {
   provider: OauthProvider;
 }
 
+const PROVIDER_ICONS = {
+  google: IconBrandGoogle,
+  github: IconBrandGithub,
+} as const;
+
+const getProviderName = (provider: OauthProvider) => {
+  return provider.charAt(0).toUpperCase() + provider.slice(1);
+};
+
 export const OAuthButton = ({ provider }: Props) => {
   const [isPending, startTransition] = useTransition();
 
+  const providerName = getProviderName(provider);
+
   const handleLogin = () => {
     startTransition(async () => {
-      const toastId = toast.loading('Подготовка к переходу...');
+      toast.loading(`Подготовка к входу через ${providerName}...`);
 
       try {
         const { error } = await authClient.signIn.social({
           provider,
-          callbackURL: `${process.env.NEXT_PUBLIC_BASE_URL}${APP_ROUTES.PROFILE}`,
+          callbackURL: `${process.env.NEXT_PUBLIC_APP_URL}${APP_ROUTES.PROFILE}`,
         });
 
         if (error) {
-          toast.error('Не удалось войти', { id: toastId });
+          toast.error(`Не удалось войти через ${providerName}`);
           return;
         }
 
-        toast.success('Перенаправляем в ' + providerName, { id: toastId });
+        toast.loading(`Перенаправляем в ${providerName}`);
       } catch {
-        toast.error('Произошла ошибка', { id: toastId });
+        toast.error(`Произошла ошибка при входе через ${providerName}`);
       }
     });
   };
 
-  const providerName = provider.charAt(0).toUpperCase() + provider.slice(1);
+  const Icon = PROVIDER_ICONS[provider];
 
   return (
     <Button className="w-full" onClick={handleLogin} disabled={isPending}>
       {isPending ? (
         <div className="flex items-center gap-2">
-          <Spinner /> <p>Перенаправление...</p>
+          <Spinner /> <p>{providerName}...</p>
         </div>
       ) : (
-        `Вход с помощью ${providerName}`
+        <div className="flex items-center gap-2">
+          {providerName} <Icon />
+        </div>
       )}
     </Button>
   );

@@ -10,36 +10,4 @@ export type FormState =
     }
   | undefined;
 
-export type OauthProvider =
-  | 'google'
-  | 'github'
-  | 'apple'
-  | 'atlassian'
-  | 'cognito'
-  | 'discord'
-  | 'facebook'
-  | 'figma'
-  | 'microsoft'
-  | 'huggingface'
-  | 'slack'
-  | 'spotify'
-  | 'twitch'
-  | 'twitter'
-  | 'dropbox'
-  | 'kick'
-  | 'linear'
-  | 'linkedin'
-  | 'gitlab'
-  | 'tiktok'
-  | 'reddit'
-  | 'roblox'
-  | 'salesforce'
-  | 'vk'
-  | 'zoom'
-  | 'notion'
-  | 'kakao'
-  | 'naver'
-  | 'paybin'
-  | 'paypal'
-  | 'polar'
-  | 'vercel';
+export type OauthProvider = 'google' | 'github';
