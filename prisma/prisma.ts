@@ -5,7 +5,6 @@ import { Pool } from 'pg';
 const connectionString = `${process.env.POSTGRES_PRISMA_URL}`;
 
 const pool = new Pool({ connectionString });
-// Адаптер позволяет Prisma работать через Vercel Postgres SDK
 const adapter = new PrismaPg(pool);
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
