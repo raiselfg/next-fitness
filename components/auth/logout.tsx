@@ -16,8 +16,6 @@ export const LogoutButton = () => {
 
   const handleLogout = () => {
     startTransition(async () => {
-      toast.loading('Выход...');
-
       try {
         await logout();
 

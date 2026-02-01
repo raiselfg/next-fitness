@@ -27,6 +27,16 @@ export const getSession = async () => {
       return null;
     }
   } catch (error) {
+    // FIX: Bubble up internal Next.js dynamic signals.
+    // Next.js uses these to identify dynamic boundaries. Catching them breaks PPR.
+    if (
+      error instanceof Error &&
+      (error.message.includes('headers()') ||
+        ('digest' in error && typeof error.digest === 'string' && error.digest.includes('DYNAMIC')))
+    ) {
+      throw error;
+    }
+
     console.error('Session fetch error:', error);
 
     // Обработка APIError из Better Auth
