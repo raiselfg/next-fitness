@@ -22,16 +22,11 @@ export const UserNav = async () => {
   return (
     <div className="flex items-center gap-2">
       <Link href={APP_ROUTES.LOGIN}>
-        <Button variant="ghost" size="sm">
-          Войти
-        </Button>
+        <Button variant="ghost">Войти</Button>
       </Link>
       <Link href={APP_ROUTES.SIGNUP}>
-        <Button
-          size="sm"
-          className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
-        >
-          Начать
+        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
+          Зарегистрироваться
         </Button>
       </Link>
     </div>
