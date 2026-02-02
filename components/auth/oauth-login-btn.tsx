@@ -4,8 +4,7 @@ import { IconBrandGithub, IconBrandGoogleFilled } from '@tabler/icons-react';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 
-import { APP_ROUTES } from '@/constants';
-import { authClient } from '@/lib/auth/better-auth-client';
+import { signInWithSocial } from '@/lib/auth/actions/oauth';
 import { OauthProvider } from '@/types';
 
 import { Button } from '../ui/button';
@@ -34,10 +33,7 @@ export const OAuthButton = ({ provider }: Props) => {
       toast.loading(`Подготовка к входу через ${providerName}...`);
 
       try {
-        const { error } = await authClient.signIn.social({
-          provider,
-          callbackURL: `${process.env.NEXT_PUBLIC_APP_URL}${APP_ROUTES.PROFILE}`,
-        });
+        const { error } = await signInWithSocial(provider);
 
         if (error) {
           toast.error(`Не удалось войти через ${providerName}`);
