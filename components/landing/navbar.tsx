@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { Skeleton } from '@/components/ui/skeleton';
 
-import { UserNav } from './user-nav';
+import { ProfileBadge } from '../profile/profile-badge';
 
 export const Navbar = () => {
   return (
@@ -17,7 +17,7 @@ export const Navbar = () => {
         </Link>
         <div className="flex items-center gap-4">
           <Suspense fallback={<Skeleton className="h-9 w-24 rounded-full" />}>
-            <UserNav />
+            <ProfileBadge />
           </Suspense>
           <ThemeToggle />
         </div>

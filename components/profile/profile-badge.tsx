@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button';
 import { APP_ROUTES } from '@/constants';
 import { getSession } from '@/lib/auth/actions/get-session';
 
-import { ProfileAvatar } from '../profile/profile-avatar';
+import { ProfileAvatar } from './profile-avatar';
 
-export const UserNav = async () => {
+export const ProfileBadge = async () => {
   'use cache: private';
   cacheLife('minutes');
 
