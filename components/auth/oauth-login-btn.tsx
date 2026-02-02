@@ -1,6 +1,6 @@
 'use client';
 
-import { IconBrandGithub, IconBrandGoogle } from '@tabler/icons-react';
+import { IconBrandGithub, IconBrandGoogleFilled } from '@tabler/icons-react';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 
@@ -16,7 +16,7 @@ interface Props {
 }
 
 const PROVIDER_ICONS = {
-  google: IconBrandGoogle,
+  google: IconBrandGoogleFilled,
   github: IconBrandGithub,
 } as const;
 
