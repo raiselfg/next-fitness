@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
   images: {
     // Поддержка современных форматов с лучшим сжатием
     formats: ['image/avif', 'image/webp'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'ui-avatars.com',
+      },
+    ],
   },
   logging: {
     fetches: {
