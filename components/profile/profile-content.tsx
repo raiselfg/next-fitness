@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { redirect } from 'next/navigation';
 
 import { APP_ROUTES } from '@/constants';
@@ -6,6 +5,7 @@ import { getSession } from '@/lib/auth/actions/get-session';
 
 import { LogoutButton } from '../auth/logout';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { ProfileAvatar } from './profile-avatar';
 
 export const ProfileContent = async () => {
   const session = await getSession();
@@ -19,16 +19,11 @@ export const ProfileContent = async () => {
   return (
     <Card>
       <CardHeader className="flex flex-col items-center gap-2">
-        {user.image && (
-          <Image
-            src={user.image}
-            alt={user.name ?? 'User Avatar'}
-            width={96}
-            height={96}
-            className="h-24 w-24 rounded-full border-4 border-primary/10 shadow-lg object-cover"
-            unoptimized
-          />
-        )}
+        <ProfileAvatar
+          user={user}
+          size={96}
+          className="border-4 border-primary/10 shadow-lg object-cover"
+        />
         <div className="text-center">
           <CardTitle className="text-3xl font-bold tracking-tight">{user.name}</CardTitle>
           <p className="text-sm text-muted-foreground font-medium">{user.email}</p>
