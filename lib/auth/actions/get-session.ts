@@ -1,11 +1,15 @@
 'use server';
 
 import { APIError } from 'better-auth/api';
+import { cacheLife } from 'next/cache';
 import { headers } from 'next/headers';
 
 import { auth } from '../better-auth';
 
 export const getSession = async () => {
+  'use cache: private';
+  cacheLife('minutes');
+
   try {
     const response = await auth.api.getSession({
       headers: await headers(),
