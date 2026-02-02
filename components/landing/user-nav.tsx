@@ -1,3 +1,4 @@
+import { cacheLife } from 'next/cache';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
@@ -7,6 +8,9 @@ import { getSession } from '@/lib/auth/actions/get-session';
 import { ProfileAvatar } from '../profile/profile-avatar';
 
 export const UserNav = async () => {
+  'use cache: private';
+  cacheLife('minutes');
+
   const session = await getSession();
 
   if (session) {

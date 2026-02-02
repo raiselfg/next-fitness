@@ -10,12 +10,14 @@ export default function MainLayout({
   children: ReactNode;
 }>) {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      {children}
+      <main className="flex-1">
+        <div>{children}</div>
+      </main>
       <Suspense fallback={<Skeleton className="h-8 w-15" />}>
         <Footer />
       </Suspense>
-    </>
+    </div>
   );
 }

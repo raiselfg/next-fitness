@@ -18,10 +18,7 @@ export const CTA = () => {
             NEXT Fitness.
           </p>
           <Link href={APP_ROUTES.SIGNUP}>
-            <Button
-              size="xl"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-2xl shadow-2xl shadow-primary/30"
-            >
+            <Button className="bg-primary h-9 md:h-12 hover:bg-primary/90 text-primary-foreground font-bold rounded-2xl shadow-2xl shadow-primary/30">
               Создать аккаунт <IconArrowRight size={20} className="ml-2" />
             </Button>
           </Link>

@@ -1,3 +1,4 @@
+import { cacheLife } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { APP_ROUTES } from '@/constants';
@@ -8,6 +9,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { ProfileAvatar } from './profile-avatar';
 
 export const ProfileContent = async () => {
+  'use cache: private';
+  cacheLife('minutes');
+
   const session = await getSession();
 
   if (!session) {
