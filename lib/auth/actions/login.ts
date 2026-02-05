@@ -3,10 +3,10 @@
 import { APIError } from 'better-auth/api';
 import * as v from 'valibot';
 
+import { LoginFormSchema } from '@/schema/auth';
 import { FormState } from '@/types';
 
 import { auth } from '../better-auth';
-import { LoginFormSchema } from '../definitions';
 
 export const login = async (prevState: FormState, formData: FormData): Promise<FormState> => {
   try {

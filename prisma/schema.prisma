@@ -20,12 +20,22 @@ model User {
   updatedAt     DateTime
 
   role          String?   @default("user")
-  gender        String?
+  gender        Gender?
   birthDate     DateTime?
   height        Int?
-  weight        Float?
-  activityLevel String?
-  goal          String?
+  weight        Int?
+  bodyFat       Int?
+  activityLevel ActivityLevel?
+  goal          Goal?
+  priority      Priority?
+
+  speed         Speed?
+  level         Level?
+  meals         Int?
+  restrictions  String?
+  location      Location?
+  frequency     Int?
+  healthIssues  String?
 
   sessions      Session[]
   accounts      Account[]
@@ -215,4 +225,52 @@ model SetLog {
   reps   Int
 
   @@map("set_log")
+}
+
+enum Gender {
+  male
+  female
+}
+
+enum Goal {
+  lose
+  gain
+  maintain
+  recomposition
+}
+
+enum Speed {
+  slow
+  medium
+  fast
+}
+
+enum Level {
+  beginner
+  intermediate
+  advanced
+}
+
+enum Location {
+  gym
+  home_equipment
+  home_no_equipment
+  outdoor
+}
+
+enum ActivityLevel {
+  sedentary
+  lightly_active
+  moderately_active
+  very_active
+  extra_active
+}
+
+enum Priority {
+  strength
+  hypertrophy
+  endurance
+  fat_loss
+  health
+  definition
 }

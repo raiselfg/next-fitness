@@ -2,6 +2,7 @@ import { IconBolt } from '@tabler/icons-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
+import { APP_ROUTES } from '@/constants';
 
 import { Badge } from '../ui/badge';
 
@@ -22,10 +23,10 @@ export const Hero = () => {
             Персональные тренировки, генерация упражнений и точный счетчик калорий. Все, что нужно
             для вашего прогресса, в одном приложении.
           </p>
-          <Link href="#">
+          <Link href={APP_ROUTES.STRATEGY_SETUP}>
             <Button
               size="xl"
-              className="bg-primary text-primary-foreground font-bold rounded-xl shadow-xl shadow-primary/20"
+              className="bg-primary cursor-pointer text-primary-foreground font-bold rounded-xl shadow-xl shadow-primary/20"
             >
               Начать бесплатно
             </Button>
