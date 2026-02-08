@@ -1,8 +1,8 @@
 import { ReactNode, Suspense } from 'react';
 
-import { Footer } from '@/components/landing/footer';
-import { Navbar } from '@/components/landing/navbar';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Footer } from '@/features/landing/components/footer';
+import { Navbar } from '@/features/landing/components/navbar';
 
 export default function MainLayout({
   children,

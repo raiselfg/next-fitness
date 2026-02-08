@@ -2,13 +2,16 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-import { LoginFormSkeleton } from '@/components/auth/login-form-skeleton';
-import { OAuthButton } from '@/components/auth/oauth-login-btn';
 import { APP_ROUTES } from '@/constants';
+import { LoginFormSkeleton } from '@/features/auth/components/login-form-skeleton';
+import { OAuthButton } from '@/features/auth/components/oauth-login-btn';
 
-const LoginForm = dynamic(() => import('@/components/auth/login-form').then((f) => f.LoginForm), {
-  ssr: true,
-});
+const LoginForm = dynamic(
+  () => import('@/features/auth/components/login-form').then((f) => f.LoginForm),
+  {
+    ssr: true,
+  },
+);
 
 export default function LoginPage() {
   return (

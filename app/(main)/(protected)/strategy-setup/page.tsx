@@ -4,15 +4,15 @@ import { useRouter } from 'next/navigation';
 import { Activity, useState, useTransition } from 'react';
 import { toast } from 'sonner';
 
-import { BioStep } from '@/components/strategy-setup/bio-step';
-import { DietStep } from '@/components/strategy-setup/diet-step';
-import { GoalStep } from '@/components/strategy-setup/goal-step';
-import { TrainingStep } from '@/components/strategy-setup/training-step';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { APP_ROUTES } from '@/constants';
-import { updateProfile } from '@/lib/profile/update-profile';
-import { StrategyFormInput } from '@/schema/strategy';
+import { updateProfile } from '@/features/profile/actions/update-profile';
+import { BioStep } from '@/features/strategy-setup/components/bio-step';
+import { DietStep } from '@/features/strategy-setup/components/diet-step';
+import { GoalStep } from '@/features/strategy-setup/components/goal-step';
+import { TrainingStep } from '@/features/strategy-setup/components/training-step';
+import { StrategyFormInput } from '@/features/strategy-setup/schema/strategy';
 
 const STEPS = [
   { id: 'bio', title: 'Ваши данные' },
@@ -27,7 +27,7 @@ export default function StrategySetupPage() {
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [formData, setFormData] = useState<Partial<StrategyFormInput>>();
 
-  const [isPending, startTransition] = useTransition();
+  const [pending, startTransition] = useTransition();
 
   const handleNext = (data: Partial<StrategyFormInput>) => {
     setFormData((prev) => ({ ...prev, ...data }));
@@ -35,7 +35,7 @@ export default function StrategySetupPage() {
   };
 
   const handleBack = () => {
-    setCurrentStep((prev) => Math.max(0, prev - 1));
+    setCurrentStep((prev) => prev - 1);
   };
 
   const handleComplete = (data: Partial<StrategyFormInput>) => {
@@ -91,9 +91,10 @@ export default function StrategySetupPage() {
           <Activity mode={currentStep === 3 ? 'visible' : 'hidden'}>
             <TrainingStep
               defaultValues={formData}
-              onComplete={handleComplete}
+              onNext={handleComplete}
               onBack={handleBack}
-              isPending={isPending}
+              isLast
+              isPending={pending}
             />
           </Activity>
         </CardContent>

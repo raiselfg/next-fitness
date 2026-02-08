@@ -1,13 +1,5 @@
-import { unauthorized } from 'next/navigation';
+import { ReactNode } from 'react';
 
-import { getSession } from '@/lib/auth/actions/get-session';
-
-export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
-  const { user } = await getSession();
-
-  if (!user) {
-    unauthorized();
-  }
-
+export default function ProtectedLayout({ children }: { children: ReactNode }) {
   return <div>{children}</div>;
 }

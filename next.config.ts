@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  reactCompiler: true,
   reactStrictMode: true,
   cacheComponents: true,
   poweredByHeader: false,

@@ -2,12 +2,12 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-import { OAuthButton } from '@/components/auth/oauth-login-btn';
-import { SignupFormSkeleton } from '@/components/auth/signup-form-skeleton';
 import { APP_ROUTES } from '@/constants';
+import { OAuthButton } from '@/features/auth/components/oauth-login-btn';
+import { SignupFormSkeleton } from '@/features/auth/components/signup-form-skeleton';
 
 const SignupForm = dynamic(
-  () => import('@/components/auth/signup-form').then((f) => f.SignupForm),
+  () => import('@/features/auth/components/signup-form').then((f) => f.SignupForm),
   {
     ssr: true,
   },
