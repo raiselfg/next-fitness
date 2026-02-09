@@ -11,22 +11,15 @@ export const auth = betterAuth({
 
   user: {
     additionalFields: {
-      role: { type: 'string', required: false, defaultValue: 'user' },
+      role: { type: 'string', required: false },
       gender: { type: 'string', required: false },
       birthDate: { type: 'date', required: false },
       height: { type: 'number', required: false },
       weight: { type: 'number', required: false },
       bodyFat: { type: 'number', required: false },
-      activityLevel: { type: 'string', required: false },
-      goal: { type: 'string', required: false },
-      priority: { type: 'string', required: false },
-      speed: { type: 'string', required: false },
-      level: { type: 'string', required: false },
       meals: { type: 'number', required: false },
-      restrictions: { type: 'string', required: false },
       location: { type: 'string', required: false },
       frequency: { type: 'number', required: false },
-      healthIssues: { type: 'string', required: false },
     },
   },
 

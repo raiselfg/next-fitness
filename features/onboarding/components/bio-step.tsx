@@ -2,12 +2,21 @@
 
 import { valibotResolver } from '@hookform/resolvers/valibot';
 import { IconCheck, IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import Image from 'next/image';
 import { Suspense } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { BirthdatePicker } from '@/components/ui/birthdate-picker';
 import { Button } from '@/components/ui/button';
 import { CardFooter } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
@@ -17,13 +26,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  ACTIVITY_LEVEL_LABELS,
-  ACTIVITY_LEVEL_OPTIONS,
-  GENDER_LABELS,
-  GENDER_OPTIONS,
-} from '@/constants';
-import { BioStepInput, bioStepSchema } from '@/features/strategy-setup/schema/strategy';
+import { GENDER_OPTIONS } from '@/features/onboarding/constants';
+import { BioStepInput, bioStepSchema } from '@/features/onboarding/schema/strategy';
 import { cn } from '@/lib/cn';
 
 interface BioStepProps {
@@ -52,9 +56,8 @@ export function BioStep({
       gender: defaultValues?.gender,
       height: defaultValues?.height,
       weight: defaultValues?.weight,
-      birthDate: defaultValues?.birthDate,
-      activityLevel: defaultValues?.activityLevel,
       bodyFat: defaultValues?.bodyFat,
+      birthDate: defaultValues?.birthDate,
     },
   });
 
@@ -95,7 +98,7 @@ export function BioStep({
                   <SelectContent>
                     {GENDER_OPTIONS.map((option) => (
                       <SelectItem key={option} value={option}>
-                        {GENDER_LABELS[option]}
+                        {option}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -131,36 +134,36 @@ export function BioStep({
         </div>
 
         <Field>
-          <FieldLabel>Активность</FieldLabel>
-          <Controller
-            control={control}
-            name="activityLevel"
-            render={({ field }) => (
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <SelectTrigger className={cn('w-full', errors.activityLevel && 'border-red-500')}>
-                  <SelectValue placeholder="Выберите уровень активности" />
-                </SelectTrigger>
-                <SelectContent>
-                  {ACTIVITY_LEVEL_OPTIONS.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {ACTIVITY_LEVEL_LABELS[option]}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          />
-          {errors.activityLevel && (
-            <p className="text-xs text-red-500">{errors.activityLevel.message}</p>
-          )}
-        </Field>
-
-        <Field>
-          <FieldLabel htmlFor="bodyFat">Процент жира (%)</FieldLabel>
+          <div className="flex items-center justify-between">
+            <FieldLabel htmlFor="bodyFat">Процент жира (%)</FieldLabel>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="ghost" className="underline text-xs">
+                  Не знаете свой процент жира?
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Процент жира</DialogTitle>
+                  <DialogDescription>
+                    Определите свой процент жира ориентируясь по этой картинике со сравнительными
+                    данными
+                  </DialogDescription>
+                </DialogHeader>
+                <Image
+                  className="mx-auto"
+                  src="/fat_percentage.jpg"
+                  alt="Body fat"
+                  width={900}
+                  height={900}
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
           <Input
             id="bodyFat"
             type="number"
-            placeholder="-"
+            placeholder="15"
             {...register('bodyFat', { valueAsNumber: true })}
             className={errors.bodyFat ? 'border-red-500' : ''}
           />

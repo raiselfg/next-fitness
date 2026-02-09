@@ -15,9 +15,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { LOCATION_LABELS, LOCATION_OPTIONS } from '@/constants';
-import { TrainingStepInput, trainingStepSchema } from '@/features/strategy-setup/schema/strategy';
+import { LOCATION_OPTIONS } from '@/features/onboarding/constants';
+import { TrainingStepInput, trainingStepSchema } from '@/features/onboarding/schema/strategy';
 
 interface TrainingStepProps {
   defaultValues?: Partial<TrainingStepInput>;
@@ -44,7 +43,6 @@ export function TrainingStep({
     defaultValues: {
       location: defaultValues?.location,
       frequency: defaultValues?.frequency,
-      healthIssues: defaultValues?.healthIssues,
     },
   });
 
@@ -64,7 +62,7 @@ export function TrainingStep({
                 <SelectContent>
                   {LOCATION_OPTIONS.map((option) => (
                     <SelectItem key={option} value={option}>
-                      {LOCATION_LABELS[option]}
+                      {option}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -86,16 +84,6 @@ export function TrainingStep({
             className={errors.frequency ? 'border-red-500' : ''}
           />
           {errors.frequency && <p className="text-xs text-red-500">{errors.frequency.message}</p>}
-        </Field>
-
-        <Field>
-          <FieldLabel htmlFor="healthIssues">Травмы / Боли</FieldLabel>
-          <Textarea
-            id="healthIssues"
-            placeholder="Боли в коленях, грыжа..."
-            className="resize-none"
-            {...register('healthIssues')}
-          />
         </Field>
       </FieldGroup>
 

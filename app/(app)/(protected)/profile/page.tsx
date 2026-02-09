@@ -5,7 +5,7 @@ import { ProfileSkeleton } from '@/features/profile/components/profile-skeleton'
 
 export default function ProfilePage() {
   return (
-    <div className="container mx-auto p-4 max-w-md absolute top-1/2 left-1/2 -translate-1/2">
+    <div className="container max-w-5xl py-8 px-4 space-y-6 mx-auto mt-16">
       <Suspense fallback={<ProfileSkeleton />}>
         <ProfileContent />
       </Suspense>

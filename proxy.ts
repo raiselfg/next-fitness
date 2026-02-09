@@ -11,7 +11,7 @@ export default async function proxy(req: NextRequest) {
 
   const isProtectedRoute =
     req.nextUrl.pathname.startsWith(APP_ROUTES.PROFILE) ||
-    req.nextUrl.pathname.startsWith(APP_ROUTES.STRATEGY_SETUP);
+    req.nextUrl.pathname.startsWith(APP_ROUTES.ONBOARDING);
 
   const isAuthRoute =
     req.nextUrl.pathname.startsWith(APP_ROUTES.LOGIN) ||

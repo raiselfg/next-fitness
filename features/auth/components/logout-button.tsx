@@ -27,7 +27,7 @@ export const LogoutButton = () => {
   };
 
   return (
-    <Button className="w-full" variant="destructive" onClick={handleLogout} disabled={isPending}>
+    <Button className="w-full" onClick={handleLogout} disabled={isPending}>
       {isPending ? (
         <div className="flex items-center gap-2">
           <Spinner /> <p>Выход...</p>

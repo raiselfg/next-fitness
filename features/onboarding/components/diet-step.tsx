@@ -8,8 +8,7 @@ import { Button } from '@/components/ui/button';
 import { CardFooter } from '@/components/ui/card';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { DietStepInput, dietStepSchema } from '@/features/strategy-setup/schema/strategy';
+import { DietStepInput, dietStepSchema } from '@/features/onboarding/schema/strategy';
 
 interface DietStepProps {
   defaultValues?: Partial<DietStepInput>;
@@ -34,7 +33,6 @@ export function DietStep({
     resolver: valibotResolver(dietStepSchema),
     defaultValues: {
       meals: defaultValues?.meals,
-      restrictions: defaultValues?.restrictions,
     },
   });
 
@@ -51,15 +49,6 @@ export function DietStep({
             className={errors.meals ? 'border-red-500' : ''}
           />
           {errors.meals && <p className="text-xs text-red-500">{errors.meals.message}</p>}
-        </Field>
-        <Field>
-          <FieldLabel htmlFor="restrictions">Аллергии / Исключения</FieldLabel>
-          <Textarea
-            id="restrictions"
-            placeholder="Например: без глютена, веган..."
-            className="resize-none"
-            {...register('restrictions')}
-          />
         </Field>
       </FieldGroup>
 

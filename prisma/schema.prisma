@@ -6,10 +6,6 @@ datasource db {
   provider = "postgresql"
 }
 
-// =======================
-// BETTER AUTH TABLES
-// =======================
-
 model User {
   id            String    @id
   name          String
@@ -20,27 +16,21 @@ model User {
   updatedAt     DateTime
 
   role          String?   @default("user")
-  gender        Gender?
+  gender        String?
+  bodyFat       Int?
   birthDate     DateTime?
   height        Int?
   weight        Int?
-  bodyFat       Int?
-  activityLevel ActivityLevel?
-  goal          Goal?
-  priority      Priority?
 
-  speed         Speed?
-  level         Level?
   meals         Int?
-  restrictions  String?
-  location      Location?
+  location      String?
   frequency     Int?
-  healthIssues  String?
 
   sessions      Session[]
   accounts      Account[]
   programs      Program[]
   dailyLogs     DailyLog[]
+  nutritionGoals NutritionGoal[]
 
   @@unique([email])
   @@map("user")
@@ -91,83 +81,43 @@ model Verification {
   @@map("verification")
 }
 
-// =======================
-// FITNESS APP CORE
-// =======================
+// --- CORE: NUTRITION & LOGS ---
 
-model Exercise {
-  id           String  @id @default(cuid())
-  name         String
-  muscleGroup  String
-  videoUrl     String? // Ссылка на локальный GIF или YouTube
-  instructions String?
-
-  isSystem Boolean @default(true) // true = видят все, false = кастомное
-
-  logs      ExerciseLog[]
-  plannedIn PlannedExercise[]
-
-  @@map("exercise")
-}
-
-model Program {
+model NutritionGoal {
   id     String @id @default(cuid())
-  userId String
+  userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  calories Int
+  protein  Int
+  carbs    Int
+  fats      Int
 
-  name     String
-  isActive Boolean @default(true)
+  createdAt DateTime @default(now())
 
-  // Цели от AI
-  targetCalories Int
-  targetProtein  Int
-  targetCarbs    Int
-  targetFat      Int
-
-  workouts  WorkoutTemplate[]
-  createdAt DateTime          @default(now())
-
-  @@map("program")
-}
-
-model WorkoutTemplate {
-  id        String  @id @default(cuid())
-  programId String
-  program   Program @relation(fields: [programId], references: [id], onDelete: Cascade)
-
-  name      String
-  dayOfWeek Int?
-
-  exercises PlannedExercise[]
-
-  @@map("workout_template")
-}
-
-model PlannedExercise {
-  id                String          @id @default(cuid())
-  workoutTemplateId String
-  workoutTemplate   WorkoutTemplate @relation(fields: [workoutTemplateId], references: [id], onDelete: Cascade)
-
-  exerciseId String
-  exercise   Exercise @relation(fields: [exerciseId], references: [id])
-
-  sets  Int
-  reps  String
-  order Int
-
-  @@map("planned_exercise")
+  @@map("nutrition_goal")
 }
 
 model DailyLog {
   id     String   @id @default(cuid())
   userId String
   user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  date   DateTime @db.Date // 2026-01-31
+  date   DateTime @db.Date
 
-  calories Int @default(0)
-  protein  Int @default(0)
-  carbs    Int @default(0)
-  fat      Int @default(0)
+  currentWeight  Int
+  currentBodyFat Int
+
+  // 1. Питание (Факт)
+  consumedCalories Int
+  consumedProtein  Int
+  consumedCarbs    Int
+  consumedFats      Int
+
+  // 2. Питание (План)
+  targetCalories   Int
+  targetProtein    Int
+  targetCarbs      Int
+  targetFats        Int
 
   meals    Meal[]
   workouts WorkoutSession[]
@@ -185,18 +135,86 @@ model Meal {
   calories Int
   protein  Int
   carbs    Int
-  fat      Int
+  fats      Int
+  
+  createdAt DateTime @default(now())
 
   @@map("meal")
 }
+
+// --- CORE: WORKOUTS ---
+
+model Program {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name      String
+  description String? // Полезно добавить описание
+  isActive  Boolean @default(true)
+
+  workouts  WorkoutTemplate[]
+  createdAt DateTime @default(now())
+
+  @@map("program")
+}
+
+model WorkoutTemplate {
+  id        String  @id @default(cuid())
+  programId String
+  program   Program @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  name      String
+  dayOfWeek Int?    // 0 = Sunday, 1 = Monday...
+
+  exercises PlannedExercise[]
+  
+  // Обратная связь для истории
+  sessions  WorkoutSession[] 
+
+  @@map("workout_template")
+}
+
+model Exercise {
+  id           String  @id @default(cuid())
+  name         String
+  muscleGroup  String
+  videoUrl     String?
+  instructions String?
+  
+  logs      ExerciseLog[]
+  plannedIn PlannedExercise[]
+
+  @@map("exercise")
+}
+
+model PlannedExercise {
+  id                String          @id @default(cuid())
+  workoutTemplateId String
+  workoutTemplate   WorkoutTemplate @relation(fields: [workoutTemplateId], references: [id], onDelete: Cascade)
+
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+
+  sets       Int
+  reps       String // "8-12" или "Failure"
+  order      Int    // Порядок упражнений
+
+  @@map("planned_exercise")
+}
+
+// --- LOGGING WORKOUTS ---
 
 model WorkoutSession {
   id         String   @id @default(cuid())
   dailyLogId String
   dailyLog   DailyLog @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+  
+  workoutTemplateId String?
+  workoutTemplate   WorkoutTemplate? @relation(fields: [workoutTemplateId], references: [id], onDelete: SetNull)
 
   name        String
-  completedAt DateTime @default(now())
+  completedAt DateTime  @default(now())
 
   exercises ExerciseLog[]
 
@@ -211,7 +229,9 @@ model ExerciseLog {
   exerciseId String
   exercise   Exercise @relation(fields: [exerciseId], references: [id])
 
-  sets SetLog[]
+  sets       SetLog[]
+  
+  order      Int     @default(0) // Порядок выполнения
 
   @@map("exercise_log")
 }
@@ -221,56 +241,11 @@ model SetLog {
   exerciseLogId String
   exerciseLog   ExerciseLog @relation(fields: [exerciseLogId], references: [id], onDelete: Cascade)
 
-  weight Float
-  reps   Int
+  weight      Int   // Вес
+  reps        Int     // Повторения
+  rpe         Int?    // Rate of Perceived Exertion (1-10) - круто для аналитики
+
+  createdAt   DateTime @default(now()) // Чтобы сортировать подходы
 
   @@map("set_log")
-}
-
-enum Gender {
-  male
-  female
-}
-
-enum Goal {
-  lose
-  gain
-  maintain
-  recomposition
-}
-
-enum Speed {
-  slow
-  medium
-  fast
-}
-
-enum Level {
-  beginner
-  intermediate
-  advanced
-}
-
-enum Location {
-  gym
-  home_equipment
-  home_no_equipment
-  outdoor
-}
-
-enum ActivityLevel {
-  sedentary
-  lightly_active
-  moderately_active
-  very_active
-  extra_active
-}
-
-enum Priority {
-  strength
-  hypertrophy
-  endurance
-  fat_loss
-  health
-  definition
 }

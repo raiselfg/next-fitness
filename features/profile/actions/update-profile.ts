@@ -6,7 +6,8 @@ import * as v from 'valibot';
 
 import { APP_ROUTES } from '@/constants';
 import { getSession } from '@/features/auth/actions/get-session';
-import { StrategyFormOutput, strategyFormSchema } from '@/features/strategy-setup/schema/strategy';
+import { StrategyFormOutput, strategyFormSchema } from '@/features/onboarding/schema/strategy';
+import { calculateCaloriesAndMacros } from '@/features/profile/lib/calculate-calories';
 import { prisma } from '@/prisma/prisma-client';
 
 type UpdateProfileResult = {
@@ -37,24 +38,40 @@ export const updateProfile = async (formData: StrategyFormOutput): Promise<Updat
       data: {
         location: validData.location,
         frequency: validData.frequency,
-        healthIssues: validData.healthIssues,
         meals: validData.meals,
-        goal: validData.goal,
-        speed: validData.speed,
-        level: validData.level,
-        priority: validData.priority,
-        restrictions: validData.restrictions,
         birthDate: validData.birthDate,
         height: validData.height,
         weight: validData.weight,
-        gender: validData.gender,
-        activityLevel: validData.activityLevel,
         bodyFat: validData.bodyFat,
+        gender: validData.gender,
+      },
+    });
+
+    const caloriesAndMacros = calculateCaloriesAndMacros(
+      validData.weight,
+      validData.bodyFat,
+      validData.gender,
+    );
+
+    await prisma.nutritionGoal.upsert({
+      where: { userId: user.id },
+      update: {
+        calories: caloriesAndMacros.calories,
+        protein: caloriesAndMacros.macros.protein,
+        fats: caloriesAndMacros.macros.fats,
+        carbs: caloriesAndMacros.macros.carbs,
+      },
+      create: {
+        userId: user.id,
+        calories: caloriesAndMacros.calories,
+        protein: caloriesAndMacros.macros.protein,
+        fats: caloriesAndMacros.macros.fats,
+        carbs: caloriesAndMacros.macros.carbs,
       },
     });
 
     revalidatePath(APP_ROUTES.PROFILE);
-    revalidatePath(APP_ROUTES.STRATEGY_SETUP);
+    revalidatePath(APP_ROUTES.ONBOARDING);
 
     return { success: true };
   } catch {

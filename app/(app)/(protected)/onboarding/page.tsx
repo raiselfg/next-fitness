@@ -7,16 +7,14 @@ import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { APP_ROUTES } from '@/constants';
+import { BioStep } from '@/features/onboarding/components/bio-step';
+import { DietStep } from '@/features/onboarding/components/diet-step';
+import { TrainingStep } from '@/features/onboarding/components/training-step';
+import { StrategyFormInput } from '@/features/onboarding/schema/strategy';
 import { updateProfile } from '@/features/profile/actions/update-profile';
-import { BioStep } from '@/features/strategy-setup/components/bio-step';
-import { DietStep } from '@/features/strategy-setup/components/diet-step';
-import { GoalStep } from '@/features/strategy-setup/components/goal-step';
-import { TrainingStep } from '@/features/strategy-setup/components/training-step';
-import { StrategyFormInput } from '@/features/strategy-setup/schema/strategy';
 
 const STEPS = [
   { id: 'bio', title: 'Ваши данные' },
-  { id: 'goal', title: 'Цели' },
   { id: 'diet', title: 'Питание' },
   { id: 'training', title: 'Тренировки' },
 ];
@@ -81,14 +79,10 @@ export default function StrategySetupPage() {
           </Activity>
 
           <Activity mode={currentStep === 1 ? 'visible' : 'hidden'}>
-            <GoalStep defaultValues={formData} onNext={handleNext} onBack={handleBack} />
-          </Activity>
-
-          <Activity mode={currentStep === 2 ? 'visible' : 'hidden'}>
             <DietStep defaultValues={formData} onNext={handleNext} onBack={handleBack} />
           </Activity>
 
-          <Activity mode={currentStep === 3 ? 'visible' : 'hidden'}>
+          <Activity mode={currentStep === 2 ? 'visible' : 'hidden'}>
             <TrainingStep
               defaultValues={formData}
               onNext={handleComplete}

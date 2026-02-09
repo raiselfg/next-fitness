@@ -2,10 +2,11 @@
 
 import { APIError } from 'better-auth/api';
 import { headers } from 'next/headers';
+import { cache } from 'react';
 
 import { auth, Session } from '../lib/better-auth';
 
-export const getSession = async () => {
+export const getSession = cache(async () => {
   try {
     const response = await auth.api.getSession({
       headers: await headers(),
@@ -51,4 +52,4 @@ export const getSession = async () => {
 
     throw error;
   }
-};
+});
