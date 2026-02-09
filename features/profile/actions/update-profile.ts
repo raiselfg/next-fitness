@@ -7,7 +7,7 @@ import * as v from 'valibot';
 import { APP_ROUTES } from '@/constants';
 import { getSession } from '@/features/auth/actions/get-session';
 import { StrategyFormOutput, strategyFormSchema } from '@/features/strategy-setup/schema/strategy';
-import { db } from '@/prisma/db';
+import { prisma } from '@/prisma/prisma-client';
 
 type UpdateProfileResult = {
   success: boolean;
@@ -32,7 +32,7 @@ export const updateProfile = async (formData: StrategyFormOutput): Promise<Updat
 
     const validData = parseResult.output;
 
-    await db.user.update({
+    await prisma.user.update({
       where: { id: user.id },
       data: {
         location: validData.location,
